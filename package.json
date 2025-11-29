@@ -1,5 +1,5 @@
 {
-  "name": "permisio",
+  "name": "permissio",
   "version": "1.0.0",
   "description": "Permis.io Node.js SDK - Authorization as a service",
   "main": "dist/index.js",
@@ -40,10 +40,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/permisio/permisio-node.git"
+    "url": "https://github.com/permissio/permissio-node.git"
   },
   "bugs": {
-    "url": "https://github.com/permisio/permisio-node/issues"
+    "url": "https://github.com/permissio/permissio-node/issues"
   },
   "homepage": "https://permis.io",
   "engines": {
