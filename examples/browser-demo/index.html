@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Permis.io SDK Demo</title>
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>🔐 Permis.io SDK Demo</h1>
+        <p>Interactive demo for testing the Permis.io Node.js SDK</p>
+      </header>
+
+      <!-- Configuration Section -->
+      <section class="card">
+        <h2>⚙️ Configuration</h2>
+        <div class="form-group">
+          <label for="apiUrl">API URL</label>
+          <input
+            type="text"
+            id="apiUrl"
+            value="http://localhost:3001"
+            placeholder="http://localhost:3001"
+          />
+        </div>
+        <div class="form-group">
+          <label for="apiKey">API Key</label>
+          <input
+            type="text"
+            id="apiKey"
+            placeholder="permis_key_your_api_key_here"
+          />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="projectId"
+              >Project ID
+              <small>(optional - auto-detected from API key)</small></label
+            >
+            <input
+              type="text"
+              id="projectId"
+              placeholder="Leave empty to auto-detect"
+            />
+          </div>
+          <div class="form-group">
+            <label for="environmentId"
+              >Environment ID
+              <small>(optional - auto-detected from API key)</small></label
+            >
+            <input
+              type="text"
+              id="environmentId"
+              placeholder="Leave empty to auto-detect"
+            />
+          </div>
+        </div>
+        <button id="initSdk" class="btn btn-primary">Initialize SDK</button>
+        <div id="sdkStatus" class="status"></div>
+      </section>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab active" data-tab="check">Permission Check</button>
+        <button class="tab" data-tab="users">Users</button>
+        <button class="tab" data-tab="roles">Roles</button>
+        <button class="tab" data-tab="tenants">Tenants</button>
+        <button class="tab" data-tab="resources">Resources</button>
+        <button class="tab" data-tab="assignments">Role Assignments</button>
+      </div>
+
+      <!-- Permission Check Tab -->
+      <section id="tab-check" class="card tab-content active">
+        <h2>🔍 Permission Check</h2>
+        <p>Check if a user has permission to perform an action on a resource</p>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="checkUser">User Key</label>
+            <input type="text" id="checkUser" placeholder="user@example.com" />
+          </div>
+          <div class="form-group">
+            <label for="checkAction">Action</label>
+            <input type="text" id="checkAction" placeholder="read" />
+          </div>
+          <div class="form-group">
+            <label for="checkResource">Resource</label>
+            <input type="text" id="checkResource" placeholder="document" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="checkTenant">Tenant (optional)</label>
+          <input type="text" id="checkTenant" placeholder="acme-corp" />
+        </div>
+        <button id="checkPermission" class="btn btn-primary">
+          Check Permission
+        </button>
+        <div id="checkResult" class="result"></div>
+      </section>
+
+      <!-- Users Tab -->
+      <section id="tab-users" class="card tab-content">
+        <h2>👤 Users Management</h2>
+
+        <div class="action-buttons">
+          <button id="listUsers" class="btn">List Users</button>
+          <button id="showCreateUser" class="btn btn-success">
+            + Create User
+          </button>
+        </div>
+
+        <div id="createUserForm" class="sub-form hidden">
+          <h3>Create New User</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="newUserKey">User Key *</label>
+              <input
+                type="text"
+                id="newUserKey"
+                placeholder="user@example.com"
+              />
+            </div>
+            <div class="form-group">
+              <label for="newUserEmail">Email</label>
+              <input
+                type="email"
+                id="newUserEmail"
+                placeholder="user@example.com"
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="newUserFirstName">First Name</label>
+              <input type="text" id="newUserFirstName" placeholder="John" />
+            </div>
+            <div class="form-group">
+              <label for="newUserLastName">Last Name</label>
+              <input type="text" id="newUserLastName" placeholder="Doe" />
+            </div>
+          </div>
+          <button id="createUser" class="btn btn-primary">Create User</button>
+          <button id="cancelCreateUser" class="btn">Cancel</button>
+        </div>
+
+        <div id="usersResult" class="result"></div>
+      </section>
+
+      <!-- Roles Tab -->
+      <section id="tab-roles" class="card tab-content">
+        <h2>🎭 Roles Management</h2>
+
+        <div class="action-buttons">
+          <button id="listRoles" class="btn">List Roles</button>
+          <button id="showCreateRole" class="btn btn-success">
+            + Create Role
+          </button>
+        </div>
+
+        <div id="createRoleForm" class="sub-form hidden">
+          <h3>Create New Role</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="newRoleKey">Role Key *</label>
+              <input type="text" id="newRoleKey" placeholder="admin" />
+            </div>
+            <div class="form-group">
+              <label for="newRoleName">Name</label>
+              <input type="text" id="newRoleName" placeholder="Administrator" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="newRoleDescription">Description</label>
+            <input
+              type="text"
+              id="newRoleDescription"
+              placeholder="Full access to all resources"
+            />
+          </div>
+          <div class="form-group">
+            <label for="newRolePermissions"
+              >Permissions (comma-separated)</label
+            >
+            <input
+              type="text"
+              id="newRolePermissions"
+              placeholder="document:read, document:write, document:delete"
+            />
+          </div>
+          <button id="createRole" class="btn btn-primary">Create Role</button>
+          <button id="cancelCreateRole" class="btn">Cancel</button>
+        </div>
+
+        <div id="rolesResult" class="result"></div>
+      </section>
+
+      <!-- Tenants Tab -->
+      <section id="tab-tenants" class="card tab-content">
+        <h2>🏢 Tenants Management</h2>
+
+        <div class="action-buttons">
+          <button id="listTenants" class="btn">List Tenants</button>
+          <button id="showCreateTenant" class="btn btn-success">
+            + Create Tenant
+          </button>
+        </div>
+
+        <div id="createTenantForm" class="sub-form hidden">
+          <h3>Create New Tenant</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="newTenantKey">Tenant Key *</label>
+              <input type="text" id="newTenantKey" placeholder="acme-corp" />
+            </div>
+            <div class="form-group">
+              <label for="newTenantName">Name</label>
+              <input
+                type="text"
+                id="newTenantName"
+                placeholder="Acme Corporation"
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="newTenantDescription">Description</label>
+            <input
+              type="text"
+              id="newTenantDescription"
+              placeholder="Main customer tenant"
+            />
+          </div>
+          <button id="createTenant" class="btn btn-primary">
+            Create Tenant
+          </button>
+          <button id="cancelCreateTenant" class="btn">Cancel</button>
+        </div>
+
+        <div id="tenantsResult" class="result"></div>
+      </section>
+
+      <!-- Resources Tab -->
+      <section id="tab-resources" class="card tab-content">
+        <h2>📦 Resources Management</h2>
+
+        <div class="action-buttons">
+          <button id="listResources" class="btn">List Resources</button>
+          <button id="showCreateResource" class="btn btn-success">
+            + Create Resource
+          </button>
+        </div>
+
+        <div id="createResourceForm" class="sub-form hidden">
+          <h3>Create New Resource Type</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="newResourceKey">Resource Key *</label>
+              <input type="text" id="newResourceKey" placeholder="document" />
+            </div>
+            <div class="form-group">
+              <label for="newResourceName">Name</label>
+              <input type="text" id="newResourceName" placeholder="Document" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="newResourceDescription">Description</label>
+            <input
+              type="text"
+              id="newResourceDescription"
+              placeholder="Document resource type"
+            />
+          </div>
+          <div class="form-group">
+            <label for="newResourceActions">Actions (comma-separated)</label>
+            <input
+              type="text"
+              id="newResourceActions"
+              placeholder="read, write, delete, share"
+            />
+          </div>
+          <button id="createResource" class="btn btn-primary">
+            Create Resource
+          </button>
+          <button id="cancelCreateResource" class="btn">Cancel</button>
+        </div>
+
+        <div id="resourcesResult" class="result"></div>
+      </section>
+
+      <!-- Role Assignments Tab -->
+      <section id="tab-assignments" class="card tab-content">
+        <h2>🔗 Role Assignments</h2>
+
+        <div class="action-buttons">
+          <button id="listAssignments" class="btn">List Assignments</button>
+          <button id="showAssignRole" class="btn btn-success">
+            + Assign Role
+          </button>
+        </div>
+
+        <div id="assignRoleForm" class="sub-form hidden">
+          <h3>Assign Role to User</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="assignUser">User Key *</label>
+              <input
+                type="text"
+                id="assignUser"
+                placeholder="user@example.com"
+              />
+            </div>
+            <div class="form-group">
+              <label for="assignRole">Role Key *</label>
+              <input type="text" id="assignRole" placeholder="admin" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="assignTenant">Tenant (optional)</label>
+            <input type="text" id="assignTenant" placeholder="acme-corp" />
+          </div>
+          <button id="assignRoleBtn" class="btn btn-primary">
+            Assign Role
+          </button>
+          <button id="cancelAssignRole" class="btn">Cancel</button>
+        </div>
+
+        <div id="assignmentsResult" class="result"></div>
+      </section>
+
+      <!-- Console Log -->
+      <section class="card">
+        <h2>📋 Console Log</h2>
+        <div id="console" class="console"></div>
+        <button id="clearConsole" class="btn">Clear Console</button>
+      </section>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

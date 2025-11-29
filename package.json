@@ -1,0 +1,67 @@
+{
+  "name": "permisio",
+  "version": "1.0.0",
+  "description": "Permis.io Node.js SDK - Authorization as a service",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "authorization",
+    "permissions",
+    "rbac",
+    "abac",
+    "access-control",
+    "permisio",
+    "sdk"
+  ],
+  "author": "Permis.io",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/permisio/permisio-node.git"
+  },
+  "bugs": {
+    "url": "https://github.com/permisio/permisio-node/issues"
+  },
+  "homepage": "https://permis.io",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.2",
+    "pino": "^8.16.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.11",
+    "@types/node": "^20.10.4",
+    "@typescript-eslint/eslint-plugin": "^6.14.0",
+    "@typescript-eslint/parser": "^6.14.0",
+    "eslint": "^8.55.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3"
+  }
+}
