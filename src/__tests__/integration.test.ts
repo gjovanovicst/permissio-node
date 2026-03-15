@@ -3,18 +3,14 @@
  *
  * Prerequisites:
  *   - Backend running at http://localhost:3001
- *   - PERMIS_API_KEY environment variable set
+ *   - PERMIS_API_KEY environment variable set (tests are skipped if absent)
  *
- * Run with: npm test
+ * Run with: PERMIS_API_KEY=<key> npm test
  */
 
 import { Permissio } from "../permissio";
 
-// Use environment-scoped key by default (required for full scope: org+project+env).
-// Override via PERMIS_API_KEY env var.
-const DEFAULT_ENV_KEY =
-  "permis_key_d39064912cd9d1f0052a98430e3eb7d689a350d84f2d0a018843541b5da3e5ef";
-const API_KEY = process.env.PERMIS_API_KEY ?? DEFAULT_ENV_KEY;
+const API_KEY = process.env.PERMIS_API_KEY;
 const API_URL = process.env.PERMIS_API_URL ?? "http://localhost:3001";
 
 // Unique suffix per test run to avoid collisions
@@ -24,13 +20,15 @@ const TEST_TENANT_KEY = `test-tenant-${TS}`;
 const TEST_ROLE_KEY = `test-role-${TS}`;
 const TEST_RESOURCE_KEY = `test-resource-${TS}`;
 
-// Always run — we have a fallback key embedded above
-const itIntegration = it;
+// Skip all integration tests when no real backend is available (e.g. CI without a server).
+// Set PERMIS_API_KEY to opt-in and run against a live backend.
+const itIntegration = API_KEY ? it : it.skip;
 
 describe("Permissio Node.js SDK — Integration", () => {
   let client: Permissio;
 
   beforeAll(async () => {
+    if (!API_KEY) return;
     client = new Permissio({ token: API_KEY, apiUrl: API_URL });
     // Pre-fetch scope so all API clients have project/env IDs ready
     await client.getScope();
